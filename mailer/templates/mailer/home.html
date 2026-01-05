@@ -1,10 +1,57 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+<!-- templates/mailings/home.html -->
+{% extends 'base.html' %}
+
+{% block title %}Главная - Сервис рассылок{% endblock %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="card text-white bg-primary mb-3">
+            <div class="card-header">Всего рассылок</div>
+            <div class="card-body">
+                <h4 class="card-title">{{ total_mailings }}</h4>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card text-white bg-success mb-3">
+            <div class="card-header">Активные рассылки</div>
+            <div class="card-body">
+                <h4 class="card-title">{{ active_mailings }}</h4>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card text-white bg-info mb-3">
+            <div class="card-header">Уникальные получатели</div>
+            <div class="card-body">
+                <h4 class="card-title">{{ unique_recipients }}</h4>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5>Быстрые действия</h5>
+            </div>
+            <div class="card-body">
+                <a href="{% url 'mailer:recipient_create' %}" class="btn btn-primary">
+                    Добавить получателя
+                </a>
+                <a href="{% url 'mailer:message_create' %}" class="btn btn-success">
+                    Создать сообщение
+                </a>
+                <a href="{% url 'mailer:mailing_create' %}" class="btn btn-info">
+                    Создать рассылку
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

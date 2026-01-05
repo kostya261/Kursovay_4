@@ -1,10 +1,43 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+<!-- templates/mailings/mailing_confirm_delete.html -->
+{% extends 'base.html' %}
+
+{% block title %}Удалить рассылку{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="text-danger">Удаление рассылки</h3>
+            </div>
+            <div class="card-body text-center">
+                <p class="lead">Вы уверены, что хотите удалить рассылку?</p>
+                <div class="alert alert-warning">
+                    <p><strong>Детали рассылки:</strong></p>
+                    <p>ID: #{{ object.id }}</p>
+                    <p>Сообщение: {{ object.message.subject }}</p>
+                    <p>Получателей: {{ object.recipients.count }}</p>
+                    <p>Попыток отправки: {{ object.attempts.count }}</p>
+                </div>
+
+                <div class="alert alert-danger">
+                    <strong>Внимание!</strong> Это действие нельзя отменить.
+                    Будут удалены все связанные попытки отправки.
+                </div>
+
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="d-flex justify-content-center gap-3">
+                        <a href="{% url 'mailer:mailing_detail' object.pk %}" class="btn btn-secondary">
+                            Отмена
+                        </a>
+                        <button type="submit" class="btn btn-danger">
+                            Да, удалить навсегда
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

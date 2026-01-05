@@ -1,0 +1,165 @@
+[
+{
+  "model": "mailer.recipient",
+  "pk": 1,
+  "fields": {
+    "email": "kos261@mail.ru",
+    "full_name": "Косарев Константин Геннадьевич",
+    "comment": "Какой то текст",
+    "users": [
+      2
+    ]
+  }
+},
+{
+  "model": "mailer.recipient",
+  "pk": 4,
+  "fields": {
+    "email": "kos261@rambler.ru",
+    "full_name": "Косарев Константин Геннадьевич",
+    "comment": "Какой то текст другого получателя...",
+    "users": [
+      2
+    ]
+  }
+},
+{
+  "model": "mailer.message",
+  "pk": 1,
+  "fields": {
+    "user": 2,
+    "subject": "Тестовое",
+    "body": "Тестовое"
+  }
+},
+{
+  "model": "mailer.message",
+  "pk": 2,
+  "fields": {
+    "user": 2,
+    "subject": "Второе письмо",
+    "body": "Здесь какой то текст, не сильно важный"
+  }
+},
+{
+  "model": "mailer.message",
+  "pk": 3,
+  "fields": {
+    "user": 2,
+    "subject": "Третье письмо",
+    "body": "И вновь не о чём"
+  }
+},
+{
+  "model": "mailer.message",
+  "pk": 4,
+  "fields": {
+    "user": 2,
+    "subject": "Четвертое тестовое письмо",
+    "body": "И снова текст ни о чём..."
+  }
+},
+{
+  "model": "mailer.mailing",
+  "pk": 1,
+  "fields": {
+    "user": 2,
+    "start_time": "2026-01-03T22:05:00Z",
+    "end_time": "2026-01-09T22:03:00Z",
+    "message": 1,
+    "recipients": [
+      1
+    ]
+  }
+},
+{
+  "model": "mailer.mailing",
+  "pk": 2,
+  "fields": {
+    "user": 2,
+    "start_time": "2026-01-05T20:40:00Z",
+    "end_time": "2026-01-31T20:37:00Z",
+    "message": 2,
+    "recipients": [
+      1,
+      4
+    ]
+  }
+},
+{
+  "model": "mailer.attempt",
+  "pk": 1,
+  "fields": {
+    "attempt_time": "2026-01-03T22:25:16.467Z",
+    "status": "Успешно",
+    "server_response": "Письмо успешно отправлено",
+    "mailing": 1
+  }
+},
+{
+  "model": "mailer.attempt",
+  "pk": 2,
+  "fields": {
+    "attempt_time": "2026-01-04T16:26:03.831Z",
+    "status": "Успешно",
+    "server_response": "Письмо успешно отправлено",
+    "mailing": 1
+  }
+},
+{
+  "model": "mailer.userstatistics",
+  "pk": 1,
+  "fields": {
+    "user": 1,
+    "total_mailings": 0,
+    "active_mailings": 0,
+    "total_recipients": 0,
+    "total_attempts": 0,
+    "successful_attempts": 0,
+    "failed_attempts": 0,
+    "last_updated": "2026-01-03T21:45:36.517Z"
+  }
+},
+{
+  "model": "mailer.userstatistics",
+  "pk": 2,
+  "fields": {
+    "user": 2,
+    "total_mailings": 2,
+    "active_mailings": 1,
+    "total_recipients": 2,
+    "total_attempts": 2,
+    "successful_attempts": 2,
+    "failed_attempts": 0,
+    "last_updated": "2026-01-05T20:37:29.479Z"
+  }
+},
+{
+  "model": "mailer.userstatistics",
+  "pk": 3,
+  "fields": {
+    "user": 3,
+    "total_mailings": 0,
+    "active_mailings": 0,
+    "total_recipients": 0,
+    "total_attempts": 0,
+    "successful_attempts": 0,
+    "failed_attempts": 0,
+    "last_updated": "2026-01-03T22:04:51.009Z"
+  }
+},
+{
+  "model": "mailer.userstatistics",
+  "pk": 4,
+  "fields": {
+    "user": 4,
+    "total_mailings": 0,
+    "active_mailings": 0,
+    "total_recipients": 0,
+    "total_attempts": 0,
+    "successful_attempts": 0,
+    "failed_attempts": 0,
+    "last_updated": "2026-01-03T22:06:39.688Z"
+  }
+}
+]

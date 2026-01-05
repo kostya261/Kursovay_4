@@ -1,10 +1,161 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+<!-- mailer/templates/mailer/statistics_detail.html -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Статистика рассылки #{{ mailing.id }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'mailer:home' %}">Главная</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'mailer:statistics' %}">Статистика</a></li>
+            <li class="breadcrumb-item active">Рассылка #{{ mailing.id }}</li>
+        </ol>
+    </nav>
+
+    <h1 class="mb-4">Статистика рассылки #{{ mailing.id }}</h1>
+
+    <!-- Информация о рассылке -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">Информация о рассылке</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Тема:</strong> {{ mailing.message.subject }}</p>
+                    <p><strong>Статус:</strong>
+                        <span class="badge bg-{% if mailing.status == 'Запущена' %}success
+                                             {% elif mailing.status == 'Завершена' %}info
+                                             {% else %}warning{% endif %}">
+                            {{ mailing.status }}
+                        </span>
+                    </p>
+                    <p><strong>Начало:</strong> {{ mailing.start_time|date:"d.m.Y H:i" }}</p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Получателей:</strong> {{ mailing.recipients.count }}</p>
+                    <p><strong>Окончание:</strong> {{ mailing.end_time|date:"d.m.Y H:i" }}</p>
+                    <p><strong>Создатель:</strong> {{ mailing.user.username }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Общая статистика -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card text-white bg-primary">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Всего попыток</h5>
+                    <h2 class="display-4">{{ total_attempts }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-success">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Успешно</h5>
+                    <h2 class="display-4">{{ successful }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-danger">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Неудачно</h5>
+                    <h2 class="display-4">{{ failed }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-info">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Успешность</h5>
+                    <h2 class="display-4">{{ success_rate }}%</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Детальная таблица попыток -->
+    <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0">Детальная история отправок</h5>
+        </div>
+        <div class="card-body">
+            {% if attempts %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>Дата и время</th>
+                        <th>Статус</th>
+                        <th>Ответ сервера</th>
+                        <th>Получатель</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for attempt in attempts %}
+                    <tr>
+                        <td>{{ attempt.attempt_time|date:"d.m.Y H:i:s" }}</td>
+                        <td>
+                                    <span class="badge bg-{% if attempt.status == 'Успешно' %}success{% else %}danger{% endif %}">
+                                        {{ attempt.status }}
+                                    </span>
+                        </td>
+                        <td>
+                            <small>{{ attempt.server_response|truncatechars:50 }}</small>
+                            {% if attempt.server_response|length > 50 %}
+                            <button class="btn btn-sm btn-link" type="button"
+                                    data-bs-toggle="collapse"
+                                    data-bs-target="#response{{ attempt.id }}">
+                                ...
+                            </button>
+                            <div class="collapse" id="response{{ attempt.id }}">
+                                <div class="card card-body">
+                                    {{ attempt.server_response }}
+                                </div>
+                            </div>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% for recipient in mailing.recipients.all %}
+                            {% if forloop.counter0 == forloop.parentloop.counter0 %}
+                            {{ recipient.email }}
+                            {% endif %}
+                            {% endfor %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="alert alert-info">
+                <p class="mb-0">Пока нет данных о попытках отправки.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Кнопки действий -->
+    <div class="mt-4">
+        <a href="{% url 'mailer:statistics' %}" class="btn btn-secondary">
+            ← Назад к статистике
+        </a>
+        <a href="{% url 'mailer:mailing_detail' mailing.id %}" class="btn btn-primary">
+            Перейти к рассылке
+        </a>
+        {% if mailing.status == 'Запущена' %}
+        <a href="{% url 'mailer:mailing_send' mailing.id %}" class="btn btn-success">
+            Отправить сейчас
+        </a>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Подключаем Bootstrap для работы collapse -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+{% endblock %}

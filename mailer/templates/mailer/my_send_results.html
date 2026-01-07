@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">
+        <i class="bi bi-clipboard-check"></i> Результаты отправки ваших рассылок
+    </h1>
+
+    <div class="alert alert-info">
+        <i class="bi bi-info-circle"></i>
+        Отправлены только ваши активные рассылки
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card text-white bg-primary">
+                <div class="card-body text-center">
+                    <h2>{{ results.total_mailings }}</h2>
+                    <p class="mb-0">Ваших рассылок</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-white bg-success">
+                <div class="card-body text-center">
+                    <h2>{{ results.total_success }}</h2>
+                    <p class="mb-0">Успешно отправлено</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-white bg-danger">
+                <div class="card-body text-center">
+                    <h2>{{ results.total_failed }}</h2>
+                    <p class="mb-0">С ошибками</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Детали -->
+    <div class="card">
+        <div class="card-header bg-secondary text-white">
+            <h5 class="mb-0">Детали по вашим рассылкам</h5>
+        </div>
+        <div class="card-body">
+            {% for result in results.results %}
+            <div class="card mb-3 {% if result.success %}border-success{% else %}border-danger{% endif %}">
+                <div class="card-body">
+                    <h5>Рассылка #{{ result.mailing_id }}</h5>
+                    <p>
+                        <strong>Тема:</strong> {{ result.subject }}<br>
+                        <strong>Получателей:</strong> {{ result.recipients_count }}<br>
+                        <strong>Статус:</strong>
+                        {% if result.success %}
+                        <span class="badge bg-success">Успешно отправлено</span>
+                        {% else %}
+                        <span class="badge bg-danger">Ошибка отправки</span>
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <a href="{% url 'mailer:mailing_list' %}" class="btn btn-primary">
+            <i class="bi bi-arrow-left"></i> Вернуться к моим рассылкам
+        </a>
+    </div>
+</div>
+{% endblock %}

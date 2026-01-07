@@ -1,10 +1,203 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% extends 'base.html' %}
+{% load i18n %}
+{% load mailing_filters %}
+
+{% block title %}{% trans 'Статистика' %}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mb-4">{% trans 'Статистика рассылок' %}</h1>
+    
+    <!-- Карточки со статистикой -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card text-white bg-primary">
+                <div class="card-header">{% trans 'Всего рассылок' %}</div>
+                <div class="card-body">
+                    <h2 class="card-title">{{ stats.total_mailings }}</h2>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="card text-white bg-success">
+                <div class="card-header">{% trans 'Активные рассылки' %}</div>
+                <div class="card-body">
+                    <h2 class="card-title">{{ stats.active_mailings }}</h2>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="card text-white bg-info">
+                <div class="card-header">{% trans 'Успешные отправки' %}</div>
+                <div class="card-body">
+                    <h2 class="card-title">{{ stats.successful_attempts }}</h2>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="card text-white bg-warning">
+                <div class="card-header">{% trans 'Процент успеха' %}</div>
+                <div class="card-body">
+                    <h2 class="card-title">{{ stats.success_rate }}%</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- График -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5>{% trans 'Активность за последние 7 дней' %}</h5>
+        </div>
+        <div class="card-body">
+            <canvas id="statsChart" width="400" height="200"></canvas>
+        </div>
+    </div>
+    
+    <!-- Последние рассылки -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5>{% trans 'Последние рассылки' %}</h5>
+        </div>
+        <div class="card-body">
+            {% if recent_mailings %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>{% trans 'Тема' %}</th>
+                            <th>{% trans 'Статус' %}</th>
+                            <th>{% trans 'Получателей' %}</th>
+                            <th>{% trans 'Успешно' %}</th>
+                            <th>{% trans 'Действия' %}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for mailing in recent_mailings %}
+                        <tr>
+                            <td>#{{ mailing.id }}</td>
+                            <td>{{ mailing.message.subject|truncatechars:30 }}</td>
+                            <td>
+                                {% if mailing.status == 'Запущена' %}
+                                <span class="badge bg-success">{{ mailing.status }}</span>
+                                {% elif mailing.status == 'Создана' %}
+                                <span class="badge bg-secondary">{{ mailing.status }}</span>
+                                {% else %}
+                                <span class="badge bg-info">{{ mailing.status }}</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ mailing.recipients.count }}</td>
+                            <td>
+                                {% with attempts=mailing.attempts.all %}
+                                    {{ attempts|filter_by:"status:Успешно"|length }} / {{ attempts.count }}
+                                {% endwith %}
+                            </td>
+                            <td>
+                                <a href="{% url 'mailer:statistics_detail' mailing.id %}" 
+                                   class="btn btn-sm btn-info">
+                                    {% trans 'Детали' %}
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="text-muted">{% trans 'Нет рассылок для отображения' %}</p>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Последние попытки -->
+    <div class="card">
+        <div class="card-header">
+            <h5>{% trans 'Последние попытки отправки' %}</h5>
+        </div>
+        <div class="card-body">
+            {% if recent_attempts %}
+            <div class="table-responsive">
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th>{% trans 'Время' %}</th>
+                            <th>{% trans 'Рассылка' %}</th>
+                            <th>{% trans 'Статус' %}</th>
+                            <th>{% trans 'Ответ сервера' %}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for attempt in recent_attempts %}
+                        <tr>
+                            <td>{{ attempt.attempt_time|date:"d.m.Y H:i" }}</td>
+                            <td>#{{ attempt.mailing.id }}</td>
+                            <td>
+                                {% if attempt.status == 'Успешно' %}
+                                <span class="badge bg-success">{{ attempt.status }}</span>
+                                {% else %}
+                                <span class="badge bg-danger">{{ attempt.status }}</span>
+                                {% endif %}
+                            </td>
+                            <td><small>{{ attempt.server_response|truncatechars:50 }}</small></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="text-muted">{% trans 'Нет попыток отправки' %}</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Chart.js для графика -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const ctx = document.getElementById('statsChart').getContext('2d');
+const chart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: {{ chart_data.dates|safe }},
+        datasets: [
+            {
+                label: '{% trans "Успешно" %}',
+                data: {{ chart_data.success }},
+                backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            },
+            {
+                label: '{% trans "Неудачно" %}',
+                data: {{ chart_data.failed }},
+                backgroundColor: 'rgba(255, 99, 132, 0.6)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 1
+            }
+        ]
+    },
+    options: {
+        responsive: true,
+        scales: {
+            y: {
+                beginAtZero: true,
+                title: {
+                    display: true,
+                    text: '{% trans "Количество отправок" %}'
+                }
+            },
+            x: {
+                title: {
+                    display: true,
+                    text: '{% trans "Дата" %}'
+                }
+            }
+        }
+    }
+});
+</script>
+{% endblock %}

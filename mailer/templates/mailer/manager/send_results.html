@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">
+        <i class="bi bi-clipboard-data"></i> Результаты отправки рассылок
+    </h1>
+
+    <!-- Сводная информация -->
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Итоги</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="card text-white bg-success mb-3">
+                        <div class="card-body text-center">
+                            <h2>{{ results.total_mailings }}</h2>
+                            <p class="mb-0">Рассылок обработано</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-white bg-info mb-3">
+                        <div class="card-body text-center">
+                            <h2>{{ results.total_recipients }}</h2>
+                            <p class="mb-0">Получателей всего</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-white bg-success mb-3">
+                        <div class="card-body text-center">
+                            <h2>{{ results.total_success }}</h2>
+                            <p class="mb-0">Успешных отправок</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-white bg-danger mb-3">
+                        <div class="card-body text-center">
+                            <h2>{{ results.total_failed }}</h2>
+                            <p class="mb-0">Ошибок отправки</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Детальная информация по каждой рассылке -->
+    <div class="card">
+        <div class="card-header bg-secondary text-white">
+            <h5 class="mb-0">Детали по рассылкам</h5>
+        </div>
+        <div class="card-body">
+            {% for result in results.results %}
+            <div class="card mb-3 {% if result.success %}border-success{% else %}border-danger{% endif %}">
+                <div class="card-header {% if result.success %}bg-success text-white{% else %}bg-danger text-white{% endif %}">
+                    <strong>Рассылка #{{ result.mailing_id }}</strong>: {{ result.subject }}
+                    <span class="float-end">
+                        {% if result.success %}
+                        <span class="badge bg-light text-dark">Успешно</span>
+                        {% else %}
+                        <span class="badge bg-warning text-dark">С ошибками</span>
+                        {% endif %}
+                    </span>
+                </div>
+                <div class="card-body">
+                    <p>
+                        <strong>Создатель:</strong> {{ result.creator }}<br>
+                        <strong>Получателей:</strong> {{ result.recipients_count }}<br>
+                        <strong>Отправлено:</strong> {{ result.success_count }} успешно,
+                        {{ result.fail_count }} с ошибками
+                    </p>
+
+                    {% if result.errors %}
+                    <div class="alert alert-warning">
+                        <strong>Ошибки:</strong>
+                        <ul class="mb-0">
+                            {% for error in result.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% empty %}
+            <div class="alert alert-info">
+                Нет активных рассылок для отправки
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <a href="{% url 'mailer:manager_mailing_list' %}" class="btn btn-primary">
+            <i class="bi bi-arrow-left"></i> Вернуться к списку рассылок
+        </a>
+
+        <a href="{% url 'mailer:manager_send_all_mailings' %}"
+           class="btn btn-success float-end"
+           onclick="return confirm('Отправить ВСЕ активные рассылки ещё раз?')">
+            <i class="bi bi-send-check"></i> Отправить снова
+        </a>
+    </div>
+</div>
+{% endblock %}

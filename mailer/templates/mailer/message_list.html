@@ -1,10 +1,55 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% block title %}Сообщения{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Сообщения</h1>
+    <a href="{% url 'mailer:message_create' %}" class="btn btn-primary">
+        + Создать сообщение
+    </a>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        {% if messages %}
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Тема</th>
+                        <th>Содержание</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for message in messages %}
+                    <tr>
+                        <td>{{ message.subject }}</td>
+                        <td>{{ message.body|truncatechars:100 }}</td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <a href="{% url 'mailer:message_update' message.pk %}"
+                                   class="btn btn-outline-primary">
+                                    Редактировать
+                                </a>
+                                <a href="{% url 'mailer:message_delete' message.pk %}"
+                                   class="btn btn-outline-danger">
+                                    Удалить
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div class="text-center py-4">
+                <p class="text-muted">Пока нет сообщений</p>
+                <a href="{% url 'mailer:message_create' %}" class="btn btn-primary">
+                    Создать первое сообщение
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

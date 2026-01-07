@@ -132,8 +132,6 @@ def password_reset(request):
                         'Инструкции по сбросу пароля отправлены на ваш email.'
                     )
 
-
-
                 except Exception as e:
                     # Если ошибка отправки, показываем ссылку для отладки
                     if settings.DEBUG:
@@ -235,7 +233,7 @@ def password_reset_confirm(request, token):
         return render(request, 'users/password_reset_confirm.html', context)
 
     except Exception as e:
-        print(f"\n❌ КРИТИЧЕСКАЯ ОШИБКА В password_reset_confirm:")
+        print("❌ КРИТИЧЕСКАЯ ОШИБКА В password_reset_confirm:")
         print(traceback.format_exc())
         print(f"{'=' * 60}\n")
 
@@ -305,7 +303,7 @@ def confirm_email(request, token):
 
 def send_confirmation_email(user):
     """Отправка письма для подтверждения email"""
-    print(f"=== EMAIL ДЛЯ ПОДТВЕРЖДЕНИЯ ===")
+    print("=== EMAIL ДЛЯ ПОДТВЕРЖДЕНИЯ ===")
     print(f"Кому: {user.email}")
-    print(f"Ссылка: http://127.0.0.1:8000/users/confirm-email/test-token/")
-    print(f"=== КОНЕЦ СООБЩЕНИЯ ===")
+    print("Ссылка: http://127.0.0.1:8000/users/confirm-email/test-token/")
+    print("=== КОНЕЦ СООБЩЕНИЯ ===")

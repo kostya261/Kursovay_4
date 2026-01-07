@@ -10,65 +10,74 @@
     </a>
 </div>
 
+<div>
+    <!-- ДЛЯ ОБЫЧНОГО ПОЛЬЗОВАТЕЛЯ -->
+    <a href="{% url 'mailer:send_my_due_mailings' %}"
+       class="btn btn-success"
+       onclick="return confirm('Отправить все ВАШИ активные рассылки?')">
+        <i class="bi bi-send"></i> Отправить мои активные рассылки
+    </a>
+</div>
+
 <div class="card">
     <div class="card-body">
         {% if mailings %}
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Статус</th>
-                        <th>Сообщение</th>
-                        <th>Начало</th>
-                        <th>Окончание</th>
-                        <th>Получателей</th>
-                        <th>Действия</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for mailing in mailings %}
-                    <tr>
-                        <td>#{{ mailing.id }}</td>
-                        <td>
-                            {% if mailing.status == 'Создана' %}
-                                <span class="badge bg-secondary">{{ mailing.status }}</span>
-                            {% elif mailing.status == 'Запущена' %}
-                                <span class="badge bg-success">{{ mailing.status }}</span>
-                            {% else %}
-                                <span class="badge bg-info">{{ mailing.status }}</span>
-                            {% endif %}
-                        </td>
-                        <td>{{ mailing.message.subject|truncatechars:30 }}</td>
-                        <td>{{ mailing.start_time|date:"d.m.Y H:i" }}</td>
-                        <td>{{ mailing.end_time|date:"d.m.Y H:i" }}</td>
-                        <td>{{ mailing.recipients_count }}</td>
-                        <td>
-                            <div class="btn-group btn-group-sm">
-                                <a href="{% url 'mailer:mailing_detail' mailing.pk %}"
-                                   class="btn btn-outline-info">
-                                    Детали
-                                </a>
-                                <a href="{% url 'mailer:mailing_update' mailing.pk %}"
-                                   class="btn btn-outline-primary">
-                                    Редактировать
-                                </a>
-                                <a href="{% url 'mailer:mailing_delete' mailing.pk %}"
-                                   class="btn btn-outline-danger">
-                                    Удалить
-                                </a>
-                            </div>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Статус</th>
+                <th>Сообщение</th>
+                <th>Начало</th>
+                <th>Окончание</th>
+                <th>Получателей</th>
+                <th>Действия</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for mailing in mailings %}
+            <tr>
+                <td>#{{ mailing.id }}</td>
+                <td>
+                    {% if mailing.status == 'Создана' %}
+                    <span class="badge bg-secondary">{{ mailing.status }}</span>
+                    {% elif mailing.status == 'Запущена' %}
+                    <span class="badge bg-success">{{ mailing.status }}</span>
+                    {% else %}
+                    <span class="badge bg-info">{{ mailing.status }}</span>
+                    {% endif %}
+                </td>
+                <td>{{ mailing.message.subject|truncatechars:30 }}</td>
+                <td>{{ mailing.start_time|date:"d.m.Y H:i" }}</td>
+                <td>{{ mailing.end_time|date:"d.m.Y H:i" }}</td>
+                <td>{{ mailing.recipients_count }}</td>
+                <td>
+                    <div class="btn-group btn-group-sm">
+                        <a href="{% url 'mailer:mailing_detail' mailing.pk %}"
+                           class="btn btn-outline-info">
+                            Детали
+                        </a>
+                        <a href="{% url 'mailer:mailing_update' mailing.pk %}"
+                           class="btn btn-outline-primary">
+                            Редактировать
+                        </a>
+                        <a href="{% url 'mailer:mailing_delete' mailing.pk %}"
+                           class="btn btn-outline-danger">
+                            Удалить
+                        </a>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
         {% else %}
-            <div class="text-center py-4">
-                <p class="text-muted">Пока нет рассылок</p>
-                <a href="{% url 'mailer:mailing_create' %}" class="btn btn-primary">
-                    Создать первую рассылку
-                </a>
-            </div>
+        <div class="text-center py-4">
+            <p class="text-muted">Пока нет рассылок</p>
+            <a href="{% url 'mailer:mailing_create' %}" class="btn btn-primary">
+                Создать первую рассылку
+            </a>
+        </div>
         {% endif %}
     </div>
 </div>

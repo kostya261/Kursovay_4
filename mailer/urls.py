@@ -28,6 +28,16 @@ urlpatterns = [
     path('mailings/<int:pk>/delete/', views.MailingDeleteView.as_view(), name='mailing_delete'),
     path('mailings/<int:pk>/send/', views.send_mailing_now, name='mailing_send'),
 
+    # Для обычного пользователя
+    path('mailings/send-my/',
+         views.send_my_due_mailings,
+         name='send_my_due_mailings'),
+
+    path('mailings/my-results/',
+         views.my_send_results,
+         name='my_send_results'),
+
+
     # Manager URLs
     path('manager/mailings/',
          views.ManagerMailingListView.as_view(),
@@ -38,6 +48,16 @@ urlpatterns = [
     path('manager/mailings/<int:pk>/toggle/',
          views.ManagerMailingToggleView.as_view(),
          name='manager_mailing_toggle'),
+    path('manager/mailings/send-all/',
+         views.send_all_due_mailings,
+         name='manager_send_all_mailings'),
+
+    path('manager/mailings/send-all/',
+         views.send_all_due_mailings,
+         name='manager_send_all_mailings'),
+    path('manager/mailings/results/',
+         views.send_all_results,
+         name='manager_send_results'),
 
     # Статистика
     path('statistics/', views.statistics, name='statistics'),

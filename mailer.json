@@ -107,6 +107,66 @@
   }
 },
 {
+  "model": "mailer.attempt",
+  "pk": 3,
+  "fields": {
+    "attempt_time": "2026-01-07T21:07:16.367Z",
+    "status": "Успешно",
+    "server_response": "Письмо успешно отправлено",
+    "mailing": 2
+  }
+},
+{
+  "model": "mailer.attempt",
+  "pk": 4,
+  "fields": {
+    "attempt_time": "2026-01-07T21:07:16.374Z",
+    "status": "Успешно",
+    "server_response": "Письмо успешно отправлено",
+    "mailing": 2
+  }
+},
+{
+  "model": "mailer.attempt",
+  "pk": 5,
+  "fields": {
+    "attempt_time": "2026-01-07T21:07:16.379Z",
+    "status": "Успешно",
+    "server_response": "Письмо успешно отправлено",
+    "mailing": 1
+  }
+},
+{
+  "model": "mailer.attempt",
+  "pk": 6,
+  "fields": {
+    "attempt_time": "2026-01-07T21:08:26.727Z",
+    "status": "Успешно",
+    "server_response": "Письмо успешно отправлено",
+    "mailing": 2
+  }
+},
+{
+  "model": "mailer.attempt",
+  "pk": 7,
+  "fields": {
+    "attempt_time": "2026-01-07T21:08:28.002Z",
+    "status": "Успешно",
+    "server_response": "Письмо успешно отправлено",
+    "mailing": 2
+  }
+},
+{
+  "model": "mailer.attempt",
+  "pk": 8,
+  "fields": {
+    "attempt_time": "2026-01-07T21:08:28.594Z",
+    "status": "Успешно",
+    "server_response": "Письмо успешно отправлено",
+    "mailing": 1
+  }
+},
+{
   "model": "mailer.userstatistics",
   "pk": 1,
   "fields": {

@@ -4,7 +4,7 @@
   "pk": 1,
   "fields": {
     "password": "pbkdf2_sha256$1200000$cgZoDvU2I08DxRmPSdrxon$+2kuovSc4hfAmeVzHrP9E2xeLgzggxcS5bdpO5WvJcw=",
-    "last_login": "2026-01-04T20:09:51.685Z",
+    "last_login": "2026-01-07T21:09:44.472Z",
     "is_superuser": true,
     "username": "kostya261",
     "first_name": "",
@@ -29,7 +29,7 @@
   "pk": 2,
   "fields": {
     "password": "pbkdf2_sha256$1200000$LlgU8I323hJcaI51ePSFOV$nS0ezIt/SH4dMZLDwsI8nJGz6vmZfJcIJjYligXZUac=",
-    "last_login": "2026-01-04T21:56:33.369Z",
+    "last_login": "2026-01-07T21:11:51.706Z",
     "is_superuser": false,
     "username": "Konstantin",
     "first_name": "",
@@ -54,7 +54,7 @@
   "pk": 3,
   "fields": {
     "password": "pbkdf2_sha256$1200000$cyiutDXicrdQYIrfOP5jOl$cX/m2UL1oV/QftSnvt7YKpNGBN/kYfNNV8s7h2kYLT0=",
-    "last_login": "2026-01-05T20:38:16.997Z",
+    "last_login": "2026-01-07T21:09:14.254Z",
     "is_superuser": false,
     "username": "Man",
     "first_name": "",

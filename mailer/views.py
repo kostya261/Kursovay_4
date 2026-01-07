@@ -271,14 +271,19 @@ def send_mailing_now(request, pk):
         )
         return redirect('mailer:mailing_detail', pk=pk)
 
+    # ВАЖНО: переименовываем функцию, чтобы не было конфликта с импортом
+    def send_mailing_task_local(mailing_id):
+        """Локальная функция для отправки, чтобы избежать конфликта имен"""
+        # ... твоя логика отправки ...
+        pass
+
     # Проверяем что получатели есть
     recipients = mailing.recipients.all()
     if not recipients.exists():
         messages.warning(request, 'Нет получателей для отправки!')
         return redirect('mailer:mailing_detail', pk=pk)
 
-    # Временно отключим реальную отправку для теста
-    messages.success(request, f'Тест: рассылка готова к отправке для {recipients.count()} получателей')
+    # Или ЛУЧШЕ: полностью удаляем дублирующую функцию и используем логику напрямую
 
     TEST_MODE = False
 
@@ -317,7 +322,7 @@ def send_mailing_now(request, pk):
             f'Рассылка отправлена! Успешно: {success_count}, Неудачно: {fail_count}'
         )
     else:
-        # Тестовый режим - просто создаем записи
+        # Тестовый режим
         for recipient in recipients:
             Attempt.objects.create(
                 mailing=mailing,
@@ -409,3 +414,97 @@ def statistics_detail(request, mailing_id):
     }
 
     return render(request, 'mailer/statistics_detail.html', context)
+
+
+@login_required
+def send_all_results(request):
+    """Страница с результатами отправки всех рассылок"""
+
+    # Проверяем права
+    if not (request.user.role == 'manager' or request.user.groups.filter(name='Менеджеры').exists()):
+        messages.error(request, 'Только менеджеры могут видеть отчеты')
+        return redirect('mailer:home')
+
+    # Получаем результаты из сессии (сохраняем после отправки)
+    results = request.session.get('mailing_results', None)
+
+    if not results:
+        messages.info(request, 'Нет данных об отправке')
+        return redirect('mailer:manager_mailing_list')
+
+    # Очищаем сессию после показа
+    if 'mailing_results' in request.session:
+        del request.session['mailing_results']
+
+    return render(request, 'mailer/manager/send_results.html', {
+        'results': results
+    })
+
+
+@login_required
+def my_send_results(request):
+    """Результаты отправки рассылок пользователя"""
+
+    results = request.session.get('my_mailing_results', None)
+
+    if not results:
+        messages.info(request, 'Нет данных об отправке')
+        return redirect('mailer:mailing_list')
+
+    # Очищаем сессию
+    if 'my_mailing_results' in request.session:
+        del request.session['my_mailing_results']
+
+    return render(request, 'mailer/my_send_results.html', {
+        'results': results
+    })
+
+
+@login_required
+def send_all_due_mailings(request):
+    """Отправка ВСЕХ активных рассылок (только для менеджеров)"""
+
+    # Проверяем права менеджера
+    if not (request.user.role == 'manager' or request.user.groups.filter(name='Менеджеры').exists()):
+        messages.error(request, 'Только менеджеры могут отправлять все рассылки')
+        return redirect('mailer:home')
+
+    from .services import process_due_mailings
+
+    try:
+        # Отправляем ВСЕ активные рассылки
+        summary = process_due_mailings()
+
+        # Сохраняем в сессии
+        request.session['mailing_results'] = summary
+
+        return redirect('mailer:manager_send_results')
+
+    except Exception as e:
+        messages.error(request, f'Ошибка при отправке рассылок: {e}')
+        return redirect('mailer:manager_mailing_list')
+
+
+@login_required
+def send_my_due_mailings(request):
+    """Отправка активных рассылок ТОЛЬКО текущего пользователя"""
+
+    from .services import process_user_due_mailings
+
+    results = process_user_due_mailings(request.user)
+
+    if not results:
+        messages.info(request, 'У вас нет активных рассылок для отправки')
+        return redirect('mailer:mailing_list')
+
+    # Подсчет статистики
+    total_success = sum(1 for r in results if r['success'])
+
+    request.session['my_mailing_results'] = {
+        'total_mailings': len(results),
+        'total_success': total_success,
+        'total_failed': len(results) - total_success,
+        'results': results
+    }
+
+    return redirect('mailer:my_send_results')

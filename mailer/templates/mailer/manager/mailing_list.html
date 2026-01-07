@@ -9,7 +9,16 @@
         {% trans 'Все рассылки' %}
         <small class="text-muted">{% trans '(Просмотр менеджера)' %}</small>
     </h1>
-    
+
+    <div>
+        <!-- ТОЛЬКО ДЛЯ МЕНЕДЖЕРА -->
+        <a href="{% url 'mailer:manager_send_all_mailings' %}"
+           class="btn btn-success btn-lg"
+           onclick="return confirm('Отправить ВСЕ активные рассылки всех пользователей?')">
+            <i class="bi bi-send-check"></i> Отправить все активные рассылки
+        </a>
+    </div>
+
     <div class="card">
         <div class="card-body">
             {% if mailings %}

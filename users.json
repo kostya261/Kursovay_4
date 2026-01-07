@@ -4,7 +4,7 @@
   "pk": 1,
   "fields": {
     "password": "pbkdf2_sha256$1200000$cgZoDvU2I08DxRmPSdrxon$+2kuovSc4hfAmeVzHrP9E2xeLgzggxcS5bdpO5WvJcw=",
-    "last_login": "2026-01-07T21:09:44.472Z",
+    "last_login": "2026-01-07T21:32:47.927Z",
     "is_superuser": true,
     "username": "kostya261",
     "first_name": "",
@@ -29,14 +29,14 @@
   "pk": 2,
   "fields": {
     "password": "pbkdf2_sha256$1200000$LlgU8I323hJcaI51ePSFOV$nS0ezIt/SH4dMZLDwsI8nJGz6vmZfJcIJjYligXZUac=",
-    "last_login": "2026-01-07T21:11:51.706Z",
+    "last_login": "2026-01-07T21:11:51Z",
     "is_superuser": false,
     "username": "Konstantin",
     "first_name": "",
     "last_name": "",
     "is_staff": false,
     "is_active": true,
-    "date_joined": "2026-01-03T21:46:36.109Z",
+    "date_joined": "2026-01-03T21:46:36Z",
     "email": "kos261@yandex.ru",
     "role": "user",
     "is_blocked": false,
@@ -45,7 +45,9 @@
     "reset_token": null,
     "reset_token_created_at": null,
     "email_confirmation_token": null,
-    "groups": [],
+    "groups": [
+      2
+    ],
     "user_permissions": []
   }
 },
@@ -54,7 +56,7 @@
   "pk": 3,
   "fields": {
     "password": "pbkdf2_sha256$1200000$cyiutDXicrdQYIrfOP5jOl$cX/m2UL1oV/QftSnvt7YKpNGBN/kYfNNV8s7h2kYLT0=",
-    "last_login": "2026-01-07T21:09:14.254Z",
+    "last_login": "2026-01-07T21:24:24Z",
     "is_superuser": false,
     "username": "Man",
     "first_name": "",
@@ -70,7 +72,9 @@
     "reset_token": null,
     "reset_token_created_at": null,
     "email_confirmation_token": null,
-    "groups": [],
+    "groups": [
+      1
+    ],
     "user_permissions": []
   }
 },
@@ -79,14 +83,14 @@
   "pk": 4,
   "fields": {
     "password": "pbkdf2_sha256$1200000$qPfzIVR5SRDYYx8Oopl8jL$CytIDsEO9cbqGakcdR8di/t5iwOFxHEm9wI5c1CQjpo=",
-    "last_login": "2026-01-04T21:43:22.360Z",
+    "last_login": "2026-01-04T21:43:22Z",
     "is_superuser": false,
     "username": "Locator",
     "first_name": "",
     "last_name": "",
     "is_staff": false,
     "is_active": true,
-    "date_joined": "2026-01-03T22:06:38.370Z",
+    "date_joined": "2026-01-03T22:06:38Z",
     "email": "loc261@test.ru",
     "role": "user",
     "is_blocked": false,
@@ -95,7 +99,9 @@
     "reset_token": null,
     "reset_token_created_at": null,
     "email_confirmation_token": null,
-    "groups": [],
+    "groups": [
+      2
+    ],
     "user_permissions": []
   }
 }
